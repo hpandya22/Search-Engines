@@ -27,8 +27,10 @@ class Index(object):
         Create a new index by parsing the given file containing documents,
         one per line. You should not modify this. """
         if filename:  # filename may be None for testing purposes.
+            self.alphabet = 'abcdefghijklmnopqrstuvwxyz'
             self.documents = self.read_lines(filename)
             stemmed_docs = [self.stem(self.tokenize(d)) for d in self.documents]
+            self.words_count = self.word_counts(self.documents)
             self.doc_freqs = self.count_doc_frequencies(stemmed_docs)
             self.index = self.create_tfidf_index(stemmed_docs, self.doc_freqs)
             self.doc_lengths = self.compute_doc_lengths(self.index)
@@ -143,7 +145,9 @@ class Index(object):
         query_terms....list of terms
         """
         dict = defaultdict(list)
+        
         for i in query_terms:
+            i = self.correct(i)
             dict[i] = math.log10(float(len(self.documents))/float(self.doc_freqs[i]))
         return dict 
             
@@ -194,7 +198,12 @@ class Index(object):
         query...........raw query string, possibly containing multiple terms (though boolean operators do not need to be supported)
         use_champions...If True, Step 4 above will use only the champion index to perform the search.
         """
+        #l = list()
+        #temp_list= self.stem(self.tokenize(query))
+        
+        
         dict = self.query_to_vector(self.stem(self.tokenize(query)))
+        
         if use_champions:
             return self.search_by_cosine(dict,self.champion_index,self.doc_lengths)
         else:
@@ -226,13 +235,35 @@ class Index(object):
         ['do', 'do', 'do', "doesn't", 'splendid']
         """
         return [re.sub('^(did|does)$', 'do', t) for t in tokens]
+    
+    def word_counts(self,documents):
+        result = defaultdict(lambda: 1)
+        for doc in documents:
+            for word in self.tokenize(doc):
+                result[word] += 1
+        return result
+
+    def known(self,words):
+        return set(w for w in words if w in self.words_count)
+    
+    def correct(self,word):
+        candidates = self.known([word]) or self.known(self.edits(word)) or [word] # 'or' returns whichever is the first non-empty value
+        return max(candidates, key=self.words_count.get)
+
+    def edits(self, word):
+        splits     = [(word[:i], word[i:]) for i in range(len(word) + 1)]
+        deletes    = [a + b[1:] for a, b in splits if b]                       # cat-> ca
+        transposes = [a + b[1] + b[0] + b[2:] for a, b in splits if len(b)>1]  # cat -> act
+        replaces   = [a + c + b[1:] for a, b in splits for c in self.alphabet if b] # cat -> car
+        inserts    = [a + c + b     for a, b in splits for c in self.alphabet]      # cat -> cats
+        return set(deletes + transposes + replaces + inserts)                  # union all edits
 
 
 def main():
     """ DO NOT MODIFY.
     Main method. Constructs an Index object and runs a sample query. """
     indexer = Index('documents.txt')
-    for query in ['pop love song', 'chinese american', 'city']:
+    for query in ['pop love song', 'chinese american', 'city', 'yity']:
         print '\n\nQUERY=', query
         print '\n'.join(['%d\t%e' % (doc_id, score) for doc_id, score in indexer.search(query)[:10]])
         print '\n\nQUERY=', query, 'Using Champion List'

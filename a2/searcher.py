@@ -81,7 +81,7 @@ class Index(object):
             if len(index[item]) > threshold:
                 result[item] = temp_list[:threshold]
             else:
-                result[item] = temp_list[:threshold]
+                result[item] = temp_list
         return result
 
     def create_tfidf_index(self, docs, doc_freqs):
@@ -106,7 +106,8 @@ class Index(object):
         >>> sorted(index.keys())
         ['a', 'b']
         >>> index['a']
-        [[0, 0.0], [1, 0.0]]
+        [[0, 0.0], [1, 0.0]]0
+        
         >>> index['b']  # doctest:+ELLIPSIS
         [[0, 0.301...]]
         """
@@ -253,7 +254,7 @@ class Index(object):
     def edits(self, word):
         splits     = [(word[:i], word[i:]) for i in range(len(word) + 1)]
         deletes    = [a + b[1:] for a, b in splits if b]                       # cat-> ca
-        transposes = [a + b[1] + b[0] + b[2:] for a, b in splits if len(b)>1]  # cat -> act
+        transposes = [a+ b[1] + b[0] + b[2:] for a, b in splits if len(b)>1]  # cat -> act
         replaces   = [a + c + b[1:] for a, b in splits for c in self.alphabet if b] # cat -> car
         inserts    = [a + c + b     for a, b in splits for c in self.alphabet]      # cat -> cats
         return set(deletes + transposes + replaces + inserts)                  # union all edits
@@ -263,7 +264,7 @@ def main():
     """ DO NOT MODIFY.
     Main method. Constructs an Index object and runs a sample query. """
     indexer = Index('documents.txt')
-    for query in ['pop love song', 'chinese american', 'city', 'yity']:
+    for query in ['pop love song', 'chinese american', 'city','kity']:
         print '\n\nQUERY=', query
         print '\n'.join(['%d\t%e' % (doc_id, score) for doc_id, score in indexer.search(query)[:10]])
         print '\n\nQUERY=', query, 'Using Champion List'

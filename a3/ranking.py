@@ -1,4 +1,4 @@
-""" Assignment 2
+""" Assignment 3
 You will modify Assignment 1 to support cosine similarity queries.
 The documents are read from documents.txt.
 The index will store tf-idf values using the formulae from class.
@@ -404,70 +404,109 @@ def main():
         #print '\n\nQUERY=', query
         #print "cosine"
         #print "precision:"
-        precision_sum_cosine += precision(indexer.search(query)[0][:20], relevent_docs[q_num])
-        recall_sum_cosine += recall(indexer.search(query)[0][:20], relevent_docs[q_num])
+        tempp = precision(indexer.search(query)[0][:20], relevent_docs[q_num])
+        precision_sum_cosine += tempp
+        tempr = recall(indexer.search(query)[0][:20], relevent_docs[q_num])
+        recall_sum_cosine += tempr
+        if tempp + tempr > 0:
+            f1_sum_cosine += (2 * tempp * tempr) / (tempp + tempr)
         
         #print "rsv"
         #print "precision:"
-        precision_sum_rsv += precision(indexer.search(query)[1][:20], relevent_docs[q_num])
-        recall_sum_rsv += recall(indexer.search(query)[1][:20], relevent_docs[q_num])
+        tempp = precision(indexer.search(query)[1][:20], relevent_docs[q_num])
+        precision_sum_rsv += tempp
+        tempr = recall(indexer.search(query)[1][:20], relevent_docs[q_num])
+        recall_sum_rsv += tempr
+        if tempp + tempr > 0:
+            f1_sum_rsv += (2 * tempp * tempr) / (tempp + tempr)
         
         
         #print "bm25_1"
         #print "precision:"
-        precision_sum_bm1 += precision(indexer.search(query)[2][:20], relevent_docs[q_num])
-        recall_sum_bm1 += recall(indexer.search(query)[2][:20], relevent_docs[q_num])
+        tempp = precision(indexer.search(query)[2][:20], relevent_docs[q_num])
+        precision_sum_bm1 += tempp
+        tempr = recall(indexer.search(query)[2][:20], relevent_docs[q_num])
+        recall_sum_bm1 += tempr
+        if tempp + tempr > 0:
+            f1_sum_bm1 += (2 * tempp * tempr) / (tempp + tempr)
         
         #print "bm25_2"
         #print "precision:"
-        precision_sum_bm2 += precision(indexer.search(query)[3][:20], relevent_docs[q_num])
-        recall_sum_bm2 += recall(indexer.search(query)[3][:20], relevent_docs[q_num])
+        tempp = precision(indexer.search(query)[3][:20], relevent_docs[q_num])
+        precision_sum_bm2 += tempp
+        tempr = recall(indexer.search(query)[3][:20], relevent_docs[q_num])
+        recall_sum_bm2 += tempr
+        if tempp + tempr > 0:
+            f1_sum_bm2 += (2 * tempp * tempr) / (tempp + tempr)
         
         #print "bm25_3"
         #print "precision:"
-        precision_sum_bm3 += precision(indexer.search(query)[4][:20], relevent_docs[q_num])
-        recall_sum_bm3 += recall(indexer.search(query)[4][:20], relevent_docs[q_num])
+        tempp = precision(indexer.search(query)[4][:20], relevent_docs[q_num])
+        precision_sum_bm3 += tempp
+        tempr = recall(indexer.search(query)[4][:20], relevent_docs[q_num])
+        recall_sum_bm3 += tempr
+        if tempp + tempr > 0:
+            f1_sum_bm3 += (2 * tempp * tempr) / (tempp + tempr)
         
         #print "bm25_4"
         #print "precision:"
         precision_sum_bm4 += precision(indexer.search(query)[5][:20], relevent_docs[q_num])
         recall_sum_bm4 += recall(indexer.search(query)[5][:20], relevent_docs[q_num])
+
+        tempp = precision(indexer.search(query)[5][:20], relevent_docs[q_num])
+        precision_sum_bm4 += tempp
+        tempr = recall(indexer.search(query)[5][:20], relevent_docs[q_num])
+        recall_sum_bm4 += tempr
+        if tempp + tempr > 0:
+            f1_sum_bm4 += (2 * tempp * tempr) / (tempp + tempr)
         
     print "cosine"
-    print "avg precision:"
-    precision_sum_cosine / float(len(queries))
-    print "avg recall:"
-    recall_sum_cosine / float(len(queries))
+    print "avg precision:",
+    print precision_sum_cosine / float(len(queries))
+    print "avg recall:",
+    print recall_sum_cosine / float(len(queries))
+    print "avg f1:",
+    print f1_sum_cosine / float(len(queries))
         
     print "rsv"
-    print "avg precision:"
+    print "avg precision:",
     print precision_sum_rsv / float(len(queries))
-    print "avg recall:"
+    print "avg recall:",
     print recall_sum_rsv / float(len(queries))
+    print "avg f1:",
+    print f1_sum_rsv / float(len(queries))
         
     print "bm25_1"
-    print "avg precision:"
+    print "avg precision:",
     print precision_sum_bm1 / float(len(queries))
-    print "avg recall:"
+    print "avg recall:",
     print recall_sum_bm1 / float(len(queries))
+    print "avg f1:",
+    print f1_sum_bm1 / float(len(queries))
         
     print "bm25_2"
-    print "avg precision:"
+    print "avg precision:",
     print precision_sum_bm2 / float(len(queries))
-    print "avg recall:"
+    print "avg recall:",
     print recall_sum_bm2 / float(len(queries))
+    print "avg f1:",
+    print f1_sum_bm2 / float(len(queries))
         
     print "bm25_3"
-    print "avg precision:"
+    print "avg precision:",
     print precision_sum_bm3 / float(len(queries))
-    print "avg recall:"
+    print "avg recall:",
     print recall_sum_bm3 / float(len(queries))
+    print "avg f1:",
+    print f1_sum_bm3 / float(len(queries))
         
     print "bm25_4"
-    print "avg precision:"
+    print "avg precision:",
     print precision_sum_bm4 / float(len(queries))
-    print "avg recall:"
+    print "avg recall:",
     print recall_sum_bm4 / float(len(queries))
+    print "avg f1:",
+    print f1_sum_bm4 / float(len(queries))
     
 
 
@@ -485,8 +524,6 @@ def recall(search_results,relevant_docs):
         if r in temp:
             found += 1
     return float(found)/float(len(relevant_docs)) 
-
-def F1_function(search_results,relevent_docs):
     
     
 if __name__ == '__main__':

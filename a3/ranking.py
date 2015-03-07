@@ -426,6 +426,7 @@ def main():
         recall_sum_rsv += tempr
         if tempp + tempr > 0:
             f1_sum_rsv += (2 * tempp * tempr) / (tempp + tempr)
+        map_sum_rsv += map(indexer.search(query)[0][:20], relevent_docs[q_num])
         
         
         #print "bm25_1"
@@ -436,6 +437,7 @@ def main():
         recall_sum_bm1 += tempr
         if tempp + tempr > 0:
             f1_sum_bm1 += (2 * tempp * tempr) / (tempp + tempr)
+        map_sum_bm1 += map(indexer.search(query)[0][:20], relevent_docs[q_num])
         
         #print "bm25_2"
         #print "precision:"
@@ -445,6 +447,7 @@ def main():
         recall_sum_bm2 += tempr
         if tempp + tempr > 0:
             f1_sum_bm2 += (2 * tempp * tempr) / (tempp + tempr)
+        map_sum_bm2 += map(indexer.search(query)[0][:20], relevent_docs[q_num])
         
         #print "bm25_3"
         #print "precision:"
@@ -454,18 +457,17 @@ def main():
         recall_sum_bm3 += tempr
         if tempp + tempr > 0:
             f1_sum_bm3 += (2 * tempp * tempr) / (tempp + tempr)
+        map_sum_bm3 += map(indexer.search(query)[0][:20], relevent_docs[q_num])
         
         #print "bm25_4"
         #print "precision:"
-        precision_sum_bm4 += precision(indexer.search(query)[5][:20], relevent_docs[q_num])
-        recall_sum_bm4 += recall(indexer.search(query)[5][:20], relevent_docs[q_num])
-
         tempp = precision(indexer.search(query)[5][:20], relevent_docs[q_num])
         precision_sum_bm4 += tempp
         tempr = recall(indexer.search(query)[5][:20], relevent_docs[q_num])
         recall_sum_bm4 += tempr
         if tempp + tempr > 0:
             f1_sum_bm4 += (2 * tempp * tempr) / (tempp + tempr)
+        map_sum_bm4 += map(indexer.search(query)[0][:20], relevent_docs[q_num])
         
     print "cosine"
     print "avg precision:",
@@ -484,7 +486,10 @@ def main():
     print recall_sum_rsv / float(len(queries))
     print "avg f1:",
     print f1_sum_rsv / float(len(queries))
-        
+    print "avg map:",
+    print map_sum_rsv / float(len(queries))
+    
+    
     print "bm25_1"
     print "avg precision:",
     print precision_sum_bm1 / float(len(queries))
@@ -492,6 +497,8 @@ def main():
     print recall_sum_bm1 / float(len(queries))
     print "avg f1:",
     print f1_sum_bm1 / float(len(queries))
+    print "avg map:",
+    print map_sum_bm1 / float(len(queries))
         
     print "bm25_2"
     print "avg precision:",
@@ -500,6 +507,8 @@ def main():
     print recall_sum_bm2 / float(len(queries))
     print "avg f1:",
     print f1_sum_bm2 / float(len(queries))
+    print "avg map:",
+    print map_sum_bm2 / float(len(queries))
         
     print "bm25_3"
     print "avg precision:",
@@ -508,6 +517,8 @@ def main():
     print recall_sum_bm3 / float(len(queries))
     print "avg f1:",
     print f1_sum_bm3 / float(len(queries))
+    print "avg map:",
+    print map_sum_bm3 / float(len(queries))
         
     print "bm25_4"
     print "avg precision:",
@@ -516,6 +527,8 @@ def main():
     print recall_sum_bm4 / float(len(queries))
     print "avg f1:",
     print f1_sum_bm4 / float(len(queries))
+    print "avg map:",
+    print map_sum_bm4 / float(len(queries))
     
 
 def map(search_results, relevant_docs):

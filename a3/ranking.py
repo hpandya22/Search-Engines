@@ -1,4 +1,4 @@
-""" Assignment 3
+""" Assignment 2
 You will modify Assignment 1 to support cosine similarity queries.
 The documents are read from documents.txt.
 The index will store tf-idf values using the formulae from class.
@@ -375,9 +375,9 @@ class Index(object):
 def main():
     """ DO NOT MODIFY.
     Main method. Constructs an Index object and runs a sample query. """
-    indexer = Index("TIME.ALL")
-    queries = indexer.read_query("TIME.QUE")
-    relevent_docs = indexer.read_relevant_docs("TIME.REL")
+    indexer = Index("time/TIME.ALL")
+    queries = indexer.read_query("time/TIME.QUE")
+    relevent_docs = indexer.read_relevant_docs("time/TIME.REL")
     
     precision_sum_cosine = 0
     precision_sum_rsv = 0
@@ -397,6 +397,12 @@ def main():
     f1_sum_bm2 = 0
     f1_sum_bm3 = 0
     f1_sum_bm4 = 0
+    map_sum_cosine = 0
+    map_sum_rsv = 0
+    map_sum_bm1 = 0
+    map_sum_bm2 = 0
+    map_sum_bm3 = 0
+    map_sum_bm4 = 0
     
     print "calculating"
     for q_num, query in enumerate(queries):
@@ -410,6 +416,7 @@ def main():
         recall_sum_cosine += tempr
         if tempp + tempr > 0:
             f1_sum_cosine += (2 * tempp * tempr) / (tempp + tempr)
+        map_sum_cosine += map(indexer.search(query)[0][:20], relevent_docs[q_num])
         
         #print "rsv"
         #print "precision:"
@@ -467,6 +474,8 @@ def main():
     print recall_sum_cosine / float(len(queries))
     print "avg f1:",
     print f1_sum_cosine / float(len(queries))
+    print "avg map:",
+    print map_sum_cosine / float(len(queries))
         
     print "rsv"
     print "avg precision:",
@@ -508,6 +517,14 @@ def main():
     print "avg f1:",
     print f1_sum_bm4 / float(len(queries))
     
+
+def map(search_results, relevant_docs):
+    total = 0
+    for result_num, result in enumerate(search_results):
+        if result[0] in relevant_docs:
+            total += precision(search_results[:result_num + 1], relevant_docs)
+    return total / float(len(search_results))
+        
 
 
 def precision(search_results, relevant_docs):

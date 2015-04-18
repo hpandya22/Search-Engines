@@ -29,6 +29,7 @@ class KMeans(object):
         See Log.txt for expected output. 
         """    
         self.list_of_means = documents[:10]
+        self.documents = documents
          
         #self.compute_clusters(documents)
                 
@@ -131,7 +132,7 @@ class KMeans(object):
         '''
         self.errors = defaultdict(int)
         '''
-      
+        self.error_per_doc = defaultdict(int)
         error = 0.0
         for mean_index in self.mean_to_doc:
             mean_mag = self.calc_mean_norm(self.list_of_means[mean_index])
@@ -142,6 +143,7 @@ class KMeans(object):
                 dist = self.distance(documents[doc_index],self.list_of_means[mean_index],mean_norm)
                 error_from_a_doc = math.sqrt(dist)
                 error += error_from_a_doc
+                self.error_per_doc[doc_index] = error_from_a_doc
         self.error_val = error
         return self.error_val
         
@@ -152,9 +154,16 @@ class KMeans(object):
         document).
         Note: To make the output more interesting, only print documents with more than 3 distinct terms.
         See Log.txt for an example."""
-        pass
-
-
+        
+        for mean_index in self.mean_to_doc:
+            print "CLUSTER %d" % mean_index
+            
+            top_docs = sorted([x for x in self.mean_to_doc[mean_index] if len(self.documents[x]) > 3], key=lambda x: self.error_per_doc[x])[:n]
+            for doc in top_docs:
+                for word in self.documents[doc].keys():
+                    print word.encode("utf-8"),
+                print
+        
 def prune_terms(docs, min_df=3):
     """ Remove terms that don't occur in at least min_df different
     documents. Return a list of Counters. Omit documents that are empty after

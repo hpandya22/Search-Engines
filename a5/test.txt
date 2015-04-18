@@ -1,0 +1,31 @@
+a a
+b b
+c c
+a e
+b e
+c e
+a
+b
+c
+a e
+b e
+c e
+a
+b
+c
+a
+b
+c
+ dist = defaultdict()
+        result = defaultdict(list)
+        for doc in documents:
+            #compute the distance of doc from each mean 
+            for mean in self.list_of_means:
+                mean_norm = self.calc_mean_norm(doc,mean)
+                dist[mean] = self.distance(doc,mean, mean_norm)
+            min_dist = min(dist)
+            corresponding_mean =  
+ INSIDER632E
+
+
+
